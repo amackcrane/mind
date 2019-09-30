@@ -1,0 +1,20 @@
+---
+# Define a tree structure representing contexts for intentional action
+# if a top-level item appears in a prior sublist, it branches from that point
+# if not, it to all branches
+closure:
+  - executive
+  - reflective
+  - social
+  - weeds:
+    - maintenance
+    - research
+    - coding
+    - hands
+    - food
+    - voluntary
+    - political
+    - job
+valence:
+  - positive
+  - negative

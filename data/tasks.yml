@@ -1,0 +1,19 @@
+---
+- task:
+  id: 1
+  context:
+    - closure.executive
+    - valence.positive
+  target: 2019.9.30
+  sol: 2019.12.31
+  content: >
+    text josh
+- task:
+  id: 2
+  context:
+    - closure.weeds
+    - weeds.research
+  target: 2019.9.24
+  sol: 2019.10.15
+  content: >
+    email chris osgood
