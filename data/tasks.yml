@@ -1,19 +1,28 @@
----
-- task:
+- !!python/object:mind.task.Task
+  content: text josh
+  context:
+  - closure.executive
+  - valence.positive
   id: 1
+  sol: 2019-12-31 00:00:00
+  target: 2019-09-30 00:00:00
+- !!python/object:mind.task.Task
+  content: email chris osgood
   context:
-    - closure.executive
-    - valence.positive
-  target: 2019.9.30
-  sol: 2019.12.31
-  content: >
-    text josh
-- task:
+  - closure.weeds.research
   id: 2
+  sol: 2019-10-15 00:00:00
+  target: 2019-09-24 00:00:00
+- !!python/object:mind.task.Task
+  content: asdf
+  context: []
+  id: 0
+  sol: 2020.1.1
+  target: 2019.1.1
+- !!python/object:mind.task.Task
+  content: hello dobby
   context:
-    - closure.weeds
-    - weeds.research
-  target: 2019.9.24
-  sol: 2019.10.15
-  content: >
-    email chris osgood
+  - valence.positive
+  id: 3
+  sol: 2020.11.22
+  target: 2019.10.5

@@ -1,0 +1,18 @@
+---
+# Define a treelike structure representing contexts for intentional action
+closure:
+  executive: 
+  reflective: 
+  social: 
+  weeds: 
+    maintenance: 
+    research: 
+    coding: 
+    hands: 
+    food: 
+    voluntary: 
+    political: 
+    job: 
+valence: 
+  positive: 
+  negative: 
