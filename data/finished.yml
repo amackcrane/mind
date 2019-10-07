@@ -1,0 +1,21 @@
+- !!python/object:mind.task.Task
+  content: build Trek
+  context: [closure.weeds.hands]
+  finished: 2019-10-04
+  id: 0
+  sol: 2019.12.31
+  target: 2019.10.15
+- !!python/object:mind.task.Task
+  content: build Trek
+  context: [closure.weeds.hands]
+  finished: 2019-10-04
+  id: 0
+  sol: 2019.12.31
+  target: 2019.10.15
+- !!python/object:mind.task.Task
+  content: build Trek
+  context: [closure.weeds.hands]
+  finished: 2019-10-04
+  id: 0
+  sol: 2019.12.31
+  target: 2019.10.15

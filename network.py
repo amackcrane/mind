@@ -1,10 +1,9 @@
 
+import yaml
 from enum import Enum
 from mind.task import Task
+import os
 
-#import importlib.machinery
-#mind = importlib.machinery.SourceFileLoader('mind', "src/mind.py").load_module()
-# TODO -- mind doesn't like being named for yaml.load reasons...
 
 class Dependency(Enum):
     weak = 1
@@ -37,8 +36,15 @@ class SimpleTask:
         return "Task " + self.id
         
 class Network:
+    
     def __init__(self):
-        self.edges = []
+        self.network_file = "data/network.yml"
+    
+        if os.path.exists(self.network_file):
+            with open(self.network_file) as f:
+                self.edges = yaml.load(f)
+        else:
+            self.edges = []
 
     def add_edge(self, edge):
         self.edges.append(edge)
@@ -60,7 +66,16 @@ class Network:
 
         self.add_edge(Edge(source, dependent, type))
 
+    # TODO
+    def dump(self):
+        if len(self.edges) > 0: 
+            with open(self.network_file, 'w') as f:
+                yaml.dump(self.edges, f)
+        else:
+            os.remove(self.network_file)
 
+# what is 'which_end'
+# what does this do
 def get_node(which_end):
     c = input(which_end + "\n't' for task; 'f' for filesystem: ")
     if c == "t":

@@ -1,6 +1,6 @@
 
 
-from datetime import datetime
+from datetime import datetime, date
 #from aenum import Enum, skip
 #from enum import Enum
 from collections import OrderedDict
@@ -42,8 +42,23 @@ class ContextHolder:
         except(KeyError):
             no_error = False
 
-        return no_error & (c == context)
+        #return no_error & (c == context)
+        return no_error
 
+
+    def match_context(context, task_context):
+        """Take in task-specific and general contex
+        separated into strings, and see if a sublist matches"""
+        if len(task_context) > len(context):
+            return ContextHolder.match_context(task_context[:-1], context)
+        else:
+            # don't match on metacontext alone:
+            if len(task_context) == 1:
+                return False
+            return task_context == context
+
+
+    
     def __str__(self):
         return str(self.contexts)
             
@@ -54,23 +69,43 @@ class ContextHolder:
                 
 
 class Context:
-    def __init__(self):
-       self.contexts = OrderedDict()
+    def __init__(self, dict=None):
+#        if  != None:
+#            flat_contexts = context.contexts
+#            self.contexts = OrderedDict()
+#            for k,y in flat_contexts.items():
+#                tasklist = list(map())
+                
+        self.contexts = OrderedDict()
 
-    def add_layer(self, context, tasks):
+#    def init_from_file(self, context):
+#        pass
+        
 
-       # collect a list of pointers to tasks!
-       # make a this_context:task map
-       context_tasks = list(filter(lambda x: context in x.context, tasks))
-       self.contexts[context] = context_tasks
+    def add_layer(self, context):
+        pass
 
+
+    def get_tasks(self, tasks):
+        # collect a list of pointers to tasks!
+        # make a this_context:task map
+
+        for context in self.contexts.keys():
+            context_tasks = list(filter(lambda x: context in x.context, tasks))
+            self.contexts[context] = context_tasks
+            
+    def unpack(self, tasks):
+        pass
 
     def reset(self):
-       self.contexts = OrderedDict()
+        self.contexts = OrderedDict()
 
     def is_set(self):
-       return len(self.contexts) > 0
+        return len(self.contexts) > 0
 
+    def list(self):
+        return list(self.contexts.keys())
+   
     def get_tasks(self):
         """Currently provides tasks for primary context only
 
@@ -81,6 +116,14 @@ class Context:
     def __str__(self):
         return str(self.contexts)
 
+    def __repr__(self):
+        contexts_rep = {}
+        for context,tasks in self.contexts.items():
+            task_ids = list(map(lambda x: x.id, tasks))
+            contexts_rep[context] = task_ids
+
+        return str(contexts_rep)
+
        
 class Task:
 
@@ -88,7 +131,7 @@ class Task:
         """create Task object
 
         Arguments:
-        id - unique integer id, should be human-typeable
+        id - unique integer id, should be typeable
         descr - arbitrary string elaboration of task
         target_date - string in YYYY.MM.DD format; start date for task
         sol_date - string in YYYY.MM.DD; absolute deadline for task
@@ -96,19 +139,27 @@ class Task:
         """
         self.id = id
         self.content = content
-        self.target = target_date
-        self.sol = sol_date
+        self.target = Task.parse_date(target_date)
+        self.sol = Task.parse_date(sol_date)
         self.context = context
+        self.finished = None # date finished
 
         
     def __init__(self, valid=None, task=None):
         if valid == None or task == None:
             return
-        # so that it's possible to write type(Task()). may be a less hackish way...
-        
+        # so that it's possible to write type(Task()). may be a less
+        #   hackish way...
+        # wait, also used in register_task for manual initialization
+
+        # I think this is parsing tasks which pyyaml has already made
+        #   into Task objects, but...
+        # not sure why we don't just load them directly into tasklist?
         if type(task) == type(Task()):
             self.init_inner(task.id, task.content, task.target, task.sol, task.context)
             return
+            # consider 'return task'????
+            # noop. init doesn't return the object
 
         task_dict = task
         
@@ -154,6 +205,15 @@ class Task:
         return date
 
     #def serialize_date(date_time):
+
+    def set_target(string_date):
+        self.target = Task.parse_date(string_date)
+
+    def set_sol(string_date):
+        self.sol = Task.parse_date(string_date)
+
+    def set_content(string):
+        self.content = string
         
     def __str__(self):
         return """------
@@ -165,6 +225,10 @@ class Task:
         
         """.format(self.content, self.id, self.target, self.sol, self.context)
 
+
+    # '==' will give deep equality
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
 
 

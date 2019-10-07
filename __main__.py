@@ -1,9 +1,9 @@
 
 
 import sys
-from mind.test import Test
-from mind.network import Network
-from mind.mind import Mind
+import mind.test as test
+#from mind.network import Network
+from mind.tasklist import Tasklist
 import os
 
 # Setup
@@ -14,22 +14,25 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Interactor:
-    mind = Mind()
-    net = Network()
-    test = Test()
+    tasklist = Tasklist()
+    #net = Network()
 
 
     # ooooh let's hold a str:func dict!
-    funcs = {"register-task": mind.register_task,
-             "set-context": mind.set_context,
-             "list": None,
-             "finish-task": None,
-             "delete-task": None,
+    funcs = {"register-task": tasklist.register_task,
+             "edit-task": tasklist.edit_task,
+             "show-task": tasklist.print_task,
+             "set-context": tasklist.set_context,
+             "list": tasklist.print_tasks,
+             "list-finished": tasklist.print_finished,
+             "finish-task": tasklist.finish_task,
+             "delete-task": tasklist.delete_task,
              "links": None,
-             "create-link": net.add_edge_interactive,
-             "tasklist": mind.get_tasklist,
+             "create-link": None, #net.add_edge_interactive,
+             "tasklist": tasklist.print_tasklist,
              "delete-link": None,
-             "test": Test.mind}
+             "get-context": tasklist.print_context,
+             "test": test.tasklist}
 
     #print("lol")
     #print(funcs)
@@ -44,18 +47,22 @@ class Interactor:
     def interact():
 
         while True:
-            x = input(">")
+            x = input("> ")
             if x == "q":
                 break
-            try:
-                x = x.split(" ")
-                if len(x) > 1:
-                    Interactor.funcs[x[0]](x[1:])
-                else:
+            x = x.split(" ")
+            if len(x) > 1:
+                Interactor.funcs[x[0]](*x[1:])
+            else:
+                try:
                     Interactor.funcs[x[0]]()
-            except Exception:
-                print("Not recognized...")
-                Interactor.halp()
+                except KeyError:
+                    print("Not recognized...")
+                    Interactor.halp()
+
+        # on exit
+        Interactor.tasklist.dump()
+        #Interactor.net.dump()
                 
 
 
@@ -83,12 +90,12 @@ class Interactor:
 # Script
 
 arglist = sys.argv[1:]
-try:
-    subcomm = arglist.pop()
-    Interactor.funcs[subcomm]()
-except IndexError:
+if arglist == []:
     Interactor.interact()
-
+else:
+    subcomm = arglist.pop(0)
+    Interactor.funcs[subcomm](*arglist)
+    
 #if subcomm == "test":
 #    Test.mind()
 #else:
