@@ -116,7 +116,7 @@ class Tasklist:
         # check if context already specified
         if len(self.context)>0:
             if input("Use present context? y/n:") == "y":
-                context = list(self.get_context)
+                context = list(self.get_context())
             else:
                 context = self.get_context_interactive()
         else:
@@ -133,10 +133,15 @@ class Tasklist:
         if target == "q": return
         sol = input("super duper deadline date (Y.M.D):")
         if sol == "q": return
+
         
         t = Task()
-        t.init_inner(id, content, target, sol, context)
-        
+        try:
+            t.init_inner(id, content, target, sol, context)
+        except Exception as e:
+            print(e.args[0])
+            return
+            
         self.tasks.append(t)
         self.dump_tasks()
 
@@ -163,6 +168,7 @@ class Tasklist:
 
     # watch out when we get network going
     def delete_task(self, id):
+        id = int(id)
         task = self.get_task_by_id(id)
         self.tasks.remove(task)
         self.dump_tasks()
@@ -304,7 +310,7 @@ class Tasklist:
         # for now, let all tasks in...
         #tasks = list(filter(lambda x: x.target < today, tasks))  # only consider current tasks
         #tasks.sort(key = lambda x: x.sol)  # sort based on SOL date
-        tasks.sort(key = lambda x: x.urgency(today))
+        tasks.sort(key = lambda x: x.urgency(today), reverse=True)
 
         return tasks
 

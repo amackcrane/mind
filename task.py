@@ -141,6 +141,10 @@ class Task:
         self.content = content
         self.target = Task.parse_date(target_date)
         self.sol = Task.parse_date(sol_date)
+
+        if self.target >= self.sol:
+            raise Exception("Invalid Dates in Task Entry")
+
         self.context = context
         self.finished = None # date finished
 
@@ -185,6 +189,8 @@ class Task:
         if ref == None:
             ref = datetime.now()
 
+        # this is now handled for manual task entry
+        # but keep around for now
         if self.sol < self.target:
             raise Exception("Bad dates in task " + self.id)
             
