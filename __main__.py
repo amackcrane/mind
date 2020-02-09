@@ -63,28 +63,7 @@ class Interactor:
         # on exit
         Interactor.tasklist.dump()
         #Interactor.net.dump()
-                
-
-
-# problem: i'd been assuming we'd be able to call all these methods on a mind object
-# but some are network or test methods.
-# try-catch lollllllll
-#   nah that's a dangerous way of type checking
-# does the function contain info on the class it comes from??
-#   maybe! try method.__self__!
-# nope, they register as functions when you pass them that way
-# options
-#   make CLI args more explicit
-#   make all python entry points from the same scope
-# is it easiest to just have functions defined here???
-# I could mix n match
-#   pass mind instance to all fxns
-#   some naturally want that
-#   some (defined here) ignore?
-# wait a sec!!!
-#   as long as we initialize mind in the Interactor body before we define
-#   funcs, we can call things on the actual instances!!!
-
+        
 
 
 # Script
@@ -96,7 +75,3 @@ else:
     subcomm = arglist.pop(0)
     Interactor.funcs[subcomm](*arglist)
     
-#if subcomm == "test":
-#    Test.mind()
-#else:
-#    print("yikes")
